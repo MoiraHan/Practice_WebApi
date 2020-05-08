@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practice_WebApi", "Practice_WebApi\Practice_WebApi.csproj", "{AA342018-406C-4885-8788-FFD1656FE6E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practice_NorthwindWebSite", "Practice_NorthwindWebSite\Practice_NorthwindWebSite.csproj", "{96CB3E7E-B7C8-4BEC-974B-BDE789ADF91F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA342018-406C-4885-8788-FFD1656FE6E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA342018-406C-4885-8788-FFD1656FE6E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA342018-406C-4885-8788-FFD1656FE6E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA342018-406C-4885-8788-FFD1656FE6E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96CB3E7E-B7C8-4BEC-974B-BDE789ADF91F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96CB3E7E-B7C8-4BEC-974B-BDE789ADF91F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96CB3E7E-B7C8-4BEC-974B-BDE789ADF91F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96CB3E7E-B7C8-4BEC-974B-BDE789ADF91F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {247ACD1B-0DF0-42D9-8AA2-90BE1B594803}
+	EndGlobalSection
+EndGlobal
