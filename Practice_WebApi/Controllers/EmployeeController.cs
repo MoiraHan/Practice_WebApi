@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Practice_WebApi.Controllers
 {
@@ -15,6 +16,7 @@ namespace Practice_WebApi.Controllers
         private NorthwindContext _Context = new NorthwindContext();
 
         // GET api/<controller>
+        [EnableCors(origins: "https://localhost:44364", headers: "*", methods: "*")]
         [HttpGet]
         public List<Employees> GetAllEmployee()
         {
@@ -22,14 +24,16 @@ namespace Practice_WebApi.Controllers
         }
 
         // GET api/<controller>/5
-        public string Get(int id)
+        [EnableCors(origins: "https://localhost:44364", headers: "*", methods: "*")]
+        public Employees Get(int id)
         {
-            return "value";
+            return _Context.Employees.ToList().FirstOrDefault(x => x.EmployeeID == id);
         }
 
         // POST api/<controller>
         public void Post([FromBody]string value)
         {
+
         }
 
         // PUT api/<controller>/5

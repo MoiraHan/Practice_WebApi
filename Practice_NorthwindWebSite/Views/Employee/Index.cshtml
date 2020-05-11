@@ -4,13 +4,128 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>員工</h2>
+
+<body>
+    <div class="container">
+        <div class="col-lg-12">
+            <h3>查詢 ( Get + 條件 )</h3>
+        </div>
+        <div class="col-lg-12">
+            查詢ID: <input type="text" id="SearchID" /><button onclick="SearchById($('#SearchID').val())">查詢</button>
+        </div>
+        <div class="col-lg-12">
+            查詢結果: <span id="SearchResult"></span>
+        </div>
+        <div class="col-lg-12">
+            <label>Last Name: </label>
+            <input type="text" id="LastName" readonly />
+        </div>
+        <div class="col-lg-12">
+            <label>First Name: </label>
+            <input type="text" id="FirstName" readonly />
+        </div>
+        <div class="col-lg-12">
+            <label>Title: </label>
+            <input type="text" id="Title" readonly />
+        </div>
+        <div class="col-lg-12">
+            <label>BirthDate: </label>
+            <input type="text" id="BirthDate" readonly />
+        </div>
+
+        <div class="col-lg-12">
+            <hr />
+        </div>
+
+        <div class="col-lg-12">
+            <h3>清單 ( Get )、修改 ( Put )、刪除 ( Delete )</h3>
+        </div>
+        <div class="col-lg-12">
+            <table class="table-bordered">
+                <thead>
+                    <tr>
+                        <th hidden>Id</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Title</th>
+                        <th>BirthDate</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbody_Data">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <hr />
+        </div>
+
+        <div class="col-lg-12">
+            <h3>新增 ( Post )</h3>
+        </div>
+        <div class="col-lg-12">
+
+        </div>
+
+    </div>
+</body>
 
 <script>
     $(document).ready(function () {
-        // TODO: ajax 接 api
+        $.ajax({
+            url: '@ValueService.NorthwindDataWebApiUrl.Employee',
+            dataType: 'json',
+            type: 'Get',
+            success: function (result) {
+                $.each(result, function (index, val) {
+                    $('#tbody_Data').append('<tr>' +
+                        '<td hidden>' + val.EmployeeID + '</td>' +
+                        '<td>' + val.LastName + '</td>' +
+                        '<td>' + val.FirstName + '</td>' +
+                        '<td>' + val.Title + '</td>' +
+                        '<td>' + val.BirthDate + '</td>' +
+                        '<td>' + val.BirthDate + '</td>' +
+                        '</tr>');
+                });
+            },
+            error: function (xhr) {
+                alert('error\r\n' + xhr.responseText);
+            }
+        })
+    });
 
-        // TODO: 接回來的 Json 資料塞值的方式
-        $('#id_name').val();
-    })
+    function SearchById(id) {
+        $('#LastName').val('');
+        $('#FirstName').val('');
+        $('#Title').val('');
+        $('#BirthDate').val('');
+        $('#SearchResult').empty();
+
+        $.ajax({
+            url: '@ValueService.NorthwindDataWebApiUrl.Employee',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            type: 'Get',
+            success: function (result) {
+                if (result != null) {
+                    $('#LastName').val(result.LastName);
+                    $('#FirstName').val(result.FirstName);
+                    $('#Title').val(result.Title);
+                    $('#BirthDate').val(result.BirthDate);
+                    $('#SearchResult').append('查詢成功 !')
+                }
+                else {
+                    $('#SearchResult').append('查無此人 !')
+                }
+
+            },
+            error: function (xhr) {
+                alert('查詢失敗\r\n' + xhr.responseText);
+            }
+        })
+    }
 </script>
