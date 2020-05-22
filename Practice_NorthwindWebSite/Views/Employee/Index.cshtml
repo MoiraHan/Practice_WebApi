@@ -19,19 +19,19 @@
         </div>
         <div class="col-lg-12">
             <label>Last Name: </label>
-            <input type="text" id="LastName" readonly />
+            <input type="text" id="Search_LastName" readonly />
         </div>
         <div class="col-lg-12">
             <label>First Name: </label>
-            <input type="text" id="FirstName" readonly />
+            <input type="text" id="Search_FirstName" readonly />
         </div>
         <div class="col-lg-12">
             <label>Title: </label>
-            <input type="text" id="Title" readonly />
+            <input type="text" id="Search_Title" readonly />
         </div>
         <div class="col-lg-12">
             <label>BirthDate: </label>
-            <input type="text" id="BirthDate" readonly />
+            <input type="text" id="Search_BirthDate" readonly />
         </div>
 
         <div class="col-lg-12">
@@ -42,7 +42,8 @@
             <h3>清單 ( Get )、修改 ( Put )、刪除 ( Delete )</h3>
         </div>
         <div class="col-lg-12">
-            <table class="table-bordered">
+            <button onclick="Test()">Load Data</button>
+            <table id="tblEmployeeList" class="table-bordered text-center">
                 <thead>
                     <tr>
                         <th hidden>Id</th>
@@ -50,6 +51,7 @@
                         <th>First Name</th>
                         <th>Title</th>
                         <th>BirthDate</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -66,41 +68,168 @@
             <h3>新增 ( Post )</h3>
         </div>
         <div class="col-lg-12">
-
+            <label>Last Name: </label>
+            <input type="text" id="Add_LastName" />
+        </div>
+        <div class="col-lg-12">
+            <label>First Name: </label>
+            <input type="text" id="Add_FirstName" />
+        </div>
+        <div class="col-lg-12">
+            <label>Title: </label>
+            <input type="text" id="Add_Title" />
+        </div>
+        <div class="col-lg-12">
+            <label>BirthDate: </label>
+            <input type="text" id="Add_BirthDate" />
         </div>
 
+        <button onclick="AddEmployee()">輸入完畢，新增！</button>
     </div>
 </body>
 
 <script>
+    //顯示 loading 視窗
+    function showLoading() {
+        $('#loadingModal').modal({ backdrop: 'static', keyboard: false });
+    }
+    //隐藏 loading 視窗
+    function hideLoading() {
+        $('#loadingModal').modal('hide');
+    }
+
     $(document).ready(function () {
+        LoadEmployeeList();
+    });
+
+    function Test() {
+        LoadEmployeeList();
+    }
+
+    function Delete(elem_btn) {
+        let row = $(elem_btn).parent().parent();
+        let id = row.find("td.data_employee_id").eq(0).html();
+        let name = row.find("td.data_employee_lastName").eq(0).html();
+
+        if (confirm('你確定要刪除' + name + '(' + id + ')' +'的資料嗎?') != true)
+            return;
+
+        alert('瞬間刪除了!!');
+        alert('騙你的ㄏㄏ!!');
+
+        showLoading();
         $.ajax({
+            url: '@ValueService.NorthwindDataWebApiUrl.Employee/' + id,
+            type: 'Delete',
+            success: function () {
+                alert('真的刪除了ㄏㄏ，打我阿笨蛋!!');
+                LoadEmployeeList();
+            },
+            error: function (xhr) {
+                alert('刪除失敗\r\n' + '回應代碼: ' + xhr.status + '\r\n' + '錯誤訊息: ' + xhr.responseText);
+                console.log('刪除失敗\r\n' + '回應代碼: ' + xhr.status + '\r\n' + '錯誤訊息: ' + xhr.responseText);
+            }
+        })
+    }
+
+    function Editor(elem_btn) {
+        //var row = $(element).parent().parent()
+        alert('You clicked on Employee Id is ' + $(elem_btn).parent().parent().find("td.data_employee_id").eq(0).html() + ' Row.');
+        alert('You clicked on Employee Name is ' + $(elem_btn).parent().parent().find("td.data_employee_lastName").eq(0).html() + ' Row.');
+    }
+
+    function LoadEmployeeList() {
+        showLoading();
+
+         $.ajax({
             url: '@ValueService.NorthwindDataWebApiUrl.Employee',
             dataType: 'json',
             type: 'Get',
-            success: function (result) {
+             success: function (result) {
+                 $('#tbody_Data').empty();
+
                 $.each(result, function (index, val) {
                     $('#tbody_Data').append('<tr>' +
-                        '<td hidden>' + val.EmployeeID + '</td>' +
-                        '<td>' + val.LastName + '</td>' +
+                        '<td class="data_employee_id" hidden>' + val.EmployeeID + '</td>' +
+                        '<td class="data_employee_lastName">' + val.LastName + '</td>' +
                         '<td>' + val.FirstName + '</td>' +
                         '<td>' + val.Title + '</td>' +
-                        '<td>' + val.BirthDate + '</td>' +
-                        '<td>' + val.BirthDate + '</td>' +
+                        '<td>' + DateTimeFormat(new Date(val.BirthDate), 'yyyy-MM-dd') + '</td>' +
+                        '<td><buttom class="btn btn-primary" onclick="Editor(this);">編輯</button>' +
+                        '<td><buttom class="btn btn-danger" onclick="Delete(this);">刪除</button>' +
                         '</tr>');
                 });
+                 hideLoading();
             },
-            error: function (xhr) {
-                alert('error\r\n' + xhr.responseText);
+             error: function (xhr) {
+                 hideLoading();
+                 alert('讀取失敗\r\n' + '回應代碼: ' + xhr.status + '\r\n' + '錯誤訊息: ' + xhr.responseText);
+                 console.log('讀取失敗\r\n' + '回應代碼: ' + xhr.status + '\r\n' + '錯誤訊息: ' + xhr.responseText);
             }
         })
-    });
+    }
+
+    function AddEmployee() {
+
+
+       let lastName = $('#Add_LastName').val();
+       let firstName = $('#Add_FirstName').val();
+       let title = $('#Add_Title').val();
+       let birthDate = $('#Add_BirthDate').val();
+
+        let errorMsg = "";
+        if (lastName == "") {
+            errorMsg = errorMsg + '請輸入 LastName !\r\n';
+        }
+        if (firstName == "") {
+            errorMsg = errorMsg + '請輸入 FirstName !\r\n';
+        }
+        if (title == "") {
+            errorMsg = errorMsg + '請輸入 Title !\r\n';
+        }
+        if (birthDate == "") {
+            errorMsg = errorMsg + '請輸入 BirthDate !';
+        }
+
+        if (errorMsg.length > 0) {
+            alert(errorMsg);
+            return;
+        }
+
+        let data = {
+                "LastName": lastName,
+                "FirstName": firstName,
+                "Title": title,
+                "BirthDate": birthDate
+        }
+
+        $.ajax({
+            url: '@ValueService.NorthwindDataWebApiUrl.Employee',
+            data:  JSON.stringify(data),
+            contentType: "application/json",
+            type: 'Post',
+            success: function (result) {
+                LoadEmployeeList();
+            },
+            error: function (xhr) {
+                let responseMsg = JSON.parse(xhr.responseText);
+
+                alert('新增失敗\r\n' + '回應代碼: ' + xhr.status + '\r\n' + '錯誤訊息: ' + responseMsg.ExceptionMessage);
+                console.log('新增失敗\r\n' + '回應代碼: ' + xhr.status + '\r\n' + '錯誤訊息: ' + xhr.responseText);
+            }
+        })
+    }
 
     function SearchById(id) {
-        $('#LastName').val('');
-        $('#FirstName').val('');
-        $('#Title').val('');
-        $('#BirthDate').val('');
+        if (id == "") {
+            alert('請輸入 ID 1~9');
+            return;
+        }
+
+        $('#Search_LastName').val('');
+        $('#Search_FirstName').val('');
+        $('#Search_Title').val('');
+        $('#Search_BirthDate').val('');
         $('#SearchResult').empty();
 
         $.ajax({
@@ -112,10 +241,10 @@
             type: 'Get',
             success: function (result) {
                 if (result != null) {
-                    $('#LastName').val(result.LastName);
-                    $('#FirstName').val(result.FirstName);
-                    $('#Title').val(result.Title);
-                    $('#BirthDate').val(result.BirthDate);
+                    $('#Search_LastName').val(result.LastName);
+                    $('#Search_FirstName').val(result.FirstName);
+                    $('#Search_Title').val(result.Title);
+                    $('#Search_BirthDate').val(result.BirthDate);
                     $('#SearchResult').append('查詢成功 !')
                 }
                 else {
@@ -124,8 +253,31 @@
 
             },
             error: function (xhr) {
-                alert('查詢失敗\r\n' + xhr.responseText);
+                alert('查詢失敗\r\n' + '回應代碼: ' + xhr.status + '\r\n' + '錯誤訊息: ' + xhr.responseText);
+                console.log('查詢失敗\r\n' + '回應代碼: ' + xhr.status + '\r\n' + '錯誤訊息: ' + xhr.responseText);
             }
         })
     }
+
+    function DateTimeFormat(date, fmt) {
+        var o = {
+            "M+": date.getMonth() + 1, //月份
+            "d+": date.getDate(), //日
+            "h+": date.getHours(), //小時
+            "m+": date.getMinutes(), //分
+            "s+": date.getSeconds(), //秒
+            "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+            "S": date.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
 </script>
+<style>
+    #tblEmployeeList th, td {
+        text-align: center;
+        padding: 5px;
+    }
+</style>

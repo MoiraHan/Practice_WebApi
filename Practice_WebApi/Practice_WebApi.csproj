@@ -194,6 +194,9 @@
     <Compile Include="Models\Orders.cs">
       <DependentUpon>NorthwindContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Order_Details.cs">
+      <DependentUpon>NorthwindContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Product_Sales_for_1997.cs">
       <DependentUpon>NorthwindContext.tt</DependentUpon>
     </Compile>

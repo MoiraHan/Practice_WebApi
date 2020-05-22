@@ -137,6 +137,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="MoiraTools\LoadingModal\Bean_Eater-1s-200px_darkbg.gif" />
+    <Content Include="MoiraTools\LoadingModal\Example.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />

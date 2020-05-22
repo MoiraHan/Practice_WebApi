@@ -31,6 +31,7 @@ namespace Practice_WebApi.Models
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Territories> Territories { get; set; }
         public virtual DbSet<Product_Sales_for_1997> Product_Sales_for_1997 { get; set; }
+        public virtual DbSet<Order_Details> Order_Details { get; set; }
     
         public virtual ObjectResult<Sales_by_Year_Result> Sales_by_Year(Nullable<System.DateTime> beginning_Date, Nullable<System.DateTime> ending_Date)
         {

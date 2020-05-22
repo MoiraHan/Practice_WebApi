@@ -12,6 +12,8 @@
         <AssociationConnector Association="NorthwindModels.FK_Employees_Employees" ManuallyRouted="false" />
         <AssociationConnector Association="NorthwindModels.FK_Orders_Employees" ManuallyRouted="false" />
         <AssociationConnector Association="NorthwindModels.EmployeeTerritories" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="NorthwindModels.Order_Details" Width="1.5" PointX="5.25" PointY="4" />
+        <AssociationConnector Association="NorthwindModels.FK_Order_Details_Orders" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

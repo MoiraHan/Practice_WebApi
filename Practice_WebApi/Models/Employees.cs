@@ -9,6 +9,7 @@
 
 namespace Practice_WebApi.Models
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
