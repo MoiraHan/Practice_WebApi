@@ -1,4 +1,5 @@
-﻿using Microsoft.Ajax.Utilities;
+﻿using AutoMapper;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using Practice_WebApi.Models;
 using System;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -17,28 +19,48 @@ namespace Practice_WebApi.Controllers
     public class EmployeeController : ApiController
     {
         private NorthwindContext _Context = new NorthwindContext();
+        protected IMapper Mapper;
+
+        /// TODO: 讓撈的人決定要忽略那些欄位 !!!
+        /// cfg.AddMap<s, t>().ForMember(t => t.Col, opt => opt.Ignore())
+        /// 育佑說 => 可以整理情境出來成為 Profile，宣告 mapper 的時候直接 AddProfile(Profile) 就好了
 
         public EmployeeController()
         {
             _Context.Configuration.LazyLoadingEnabled = true;
             // 將 DB 操作記錄寫在 「輸出」視窗中
             _Context.Database.Log = s => Debug.WriteLine(s);
+            Mapper = new MapperConfiguration(
+                cfg => cfg.CreateMap<Employees, EmployeesViewModel>()
+                .ForMember(x => x.Territories, opt => opt.Ignore())
+                .ForMember(x => x.Employees1, opt => opt.Ignore())
+                .ForMember(x => x.Employees2, opt => opt.Ignore())
+                .ForMember(x => x.Orders, opt => opt.Ignore())
+                )
+                .CreateMapper();
+
         }
 
         // GET api/<controller>
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         [HttpGet]
-        public List<Employees> GetAllEmployee()
+        public List<EmployeesViewModel> GetAllEmployee()
         {
             // 使用 AsNoTracking 的話，會 always 讀取最新資料，不會從 DB 的 Cache 取得資料。
-            return _Context.Employees.AsNoTracking().ToList();
+            var data = _Context.Employees.AsNoTracking().ToList();
+            var result = Mapper.Map<List<EmployeesViewModel>>(data);
+
+            return result;
         }
 
         // GET api/<controller>/5
         [EnableCors(origins: "*", headers: "*", methods: "*")]
-        public Employees Get(int id)
+        public EmployeesViewModel Get(int id)
         {
-            return _Context.Employees.Include(x=>x.Orders).FirstOrDefault(x => x.EmployeeID == id);
+            var data = _Context.Employees.FirstOrDefault(x => x.EmployeeID == id);
+            var result = Mapper.Map<EmployeesViewModel>(data);
+
+            return result;
         }
 
         // POST api/<controller>
